@@ -1,0 +1,5 @@
+in=/Users/chenyanxiong/Dropbox/zhitu/DocumentClassification/SogouTrainData/RawTrainingData
+out=/Users/chenyanxiong/Dropbox/zhitu/DocumentClassification/SogouTrainData/SogouSVMData
+worddfdict=/Users/chenyanxiong/Dropbox/zhitu/DocumentClassification/SogouTrainData/SogouDF
+wordiddict=/Users/chenyanxiong/Dropbox/zhitu/DocumentClassification/SogouTrainData/SogouWordIdDict
+classiddict=/Users/chenyanxiong/Dropbox/zhitu/DocumentClassification/SogouTrainData/SogouClassIdDict
