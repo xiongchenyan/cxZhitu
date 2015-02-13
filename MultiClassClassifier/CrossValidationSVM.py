@@ -3,9 +3,9 @@ Created on my MAC Feb 12, 2015-10:36:01 PM
 What I do:
 I CV svm
 What's my input:
-SVMData, CV Range, work dir
+    SVMData, CV Range, work dir
 What's my output:
-Avg C for 
+    Accuracy for each C
 @author: chenyanxiong
 '''
 
@@ -22,7 +22,7 @@ class CrossValidateSVMC(object):
     def __init__(self,ConfIn = ""):
         self.Init()
         if "" != ConfIn:
-            self.SetConf()
+            self.SetConf(ConfIn)
             
             
     def Init(self):
@@ -42,7 +42,8 @@ class CrossValidateSVMC(object):
         self.SVMTrain = self.SVMDir + '/svm_multiclass_learn'
         self.SVMTest = self.SVMDir + '/svm_multiclass_classify'
         self.lC = self.conf.GetConf('c',[1,10,100,1000,10000,100000])
-        self.lCAcc = [0] * self.lC
+        self.lC = [float(c) for c in self.lC]
+        self.lCAcc = [0] * len(self.lC)
         
     @staticmethod
     def ShowConf():
@@ -58,7 +59,8 @@ class CrossValidateSVMC(object):
         line = lLine[-1]
         vCol = line.split()
         Acc = vCol[4].strip("%")
-        Acc = float(Acc) / 100.0
+        Acc = 1 - float(Acc) / 100.0
+        print 'Acc [%f]' %(Acc)
         return Acc
         
     def ProcessOneFold(self,k):
@@ -67,17 +69,21 @@ class CrossValidateSVMC(object):
         for i in range(len(self.lC)):
             ModelName = TrainName + '_model_%f' %(self.lC[i])
             PreName = ModelName + '_pre'
-            lTrainCmd = [self.SVMTrain, '-c','%f' %(self.lC[i]),TrainName,self.workdir + ModelName]
+            lTrainCmd = [self.SVMTrain, '-c','%f' %(self.lC[i]),TrainName,ModelName]
             print 'svm run ' + json.dumps(lTrainCmd)
             subprocess.check_output(lTrainCmd)
             lTestCmd = [self.SVMTest,TestName,ModelName,PreName]
             print 'svm test ' + json.dumps(lTestCmd)
-            OutStr = subprocess.check_output(lTestCmd)
+            OutStr = subprocess.check_output(lTestCmd).strip()
+            print OutStr
             self.lCAcc[i] += self.SegTestAccFromSVMOut(OutStr) / 5
         print '[%d fold done' %(k)
         return
         
     def Process(self):
+        print 'start preparing data'
+        self.PrepareData()
+        print 'start CV'
         for k in range(5):
             self.ProcessOneFold(k)
         out = open(self.workdir + 'CVAcc','w')

@@ -2,20 +2,25 @@
 Created on Feb 12, 2014 22:01:09 PM
 @author: cx
 
+
+This is the main class used to classify textual document/ad text
+
 what I do:
 I call external SVM (SVMLight) multi class classifier
 and pretrained models to classify text
 what's my input:
-SVM classifier path
-SVM pre trained model path
-SVM term hash dict (pickle dump of term->id)
-text to classify
-middirectory to dump data
+    SVM classifier path
+    SVM pre trained model path
+    SVM term hash dict (pickle dump of term->id)
+    term df dict (pickle dump of term->Df)
+    text to classify
+    middirectory to dump data
 what's my output:
-llScore, the Score of each text belong to classes
+    lhClass, the Score of each text belong to classes, [{class id: weight}], one item for each input line
 '''
 
 import site
+import math
 site.addsitedir('/Users/chenyanxiong/workspace/cxZhitu')
 
 from cxBasic.Conf import cxConfC
@@ -55,21 +60,23 @@ class ExtSVMMultiClassifierC(object):
         
     @staticmethod
     def ShowConf():
-        print "svmpath\nsvmmodel\ntempdir\ntermhashin"
+        print "conf:\nsvmpath=(svm_multiclass_classify location)\nsvmmodel=(pre trained svm model)\ntempdir=(an temporary dir to work in)\ntermhashin=\n(the hash id dict of term)termdfin=\n(the term df (term id -> df))"
         
         
     def TransferTextToSVMFormat(self,text):
         lTerm = text.split()
         hFeature = {}
+        DocCnt = self.hTermDF['DocCnt']
         for term in lTerm:
             if not term in self.hTermId:
                 continue
             key = self.hTermId[term]
+            DF = self.hTermDF[term]
+            Idf = math.log(DocCnt / DF)
             if not key in hFeature:
-                hFeature[key] = 1
+                hFeature[key] = Idf
             else:
-                hFeature[key] += 1
-        
+                hFeature[key] += Idf
         
         lFItem = hFeature.items()
         

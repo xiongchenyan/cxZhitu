@@ -1,8 +1,8 @@
 '''
-movie conf class from base.py
-rename it as cxConfC
-modify some api
 @author: cx
+
+I read and load conf files
+
 '''
 
 
