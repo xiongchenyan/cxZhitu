@@ -1,5 +1,4 @@
 '''
-Created on Jun 4, 2014
 movie conf class from base.py
 rename it as cxConfC
 modify some api
