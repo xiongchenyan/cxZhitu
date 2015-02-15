@@ -104,41 +104,55 @@ class ExtSVMMultiClassifierC(object):
         out.close()
         
         
-    def Predict(self):
-        self.PredictOut=self.ThisTempName + '_pred'
+    def Predict(self,OutName,ReadRes = False):
+        if OutName == "":
+            self.PredictOut=self.ThisTempName + '_pred'
+        else:
+            self.PredictOut = OutName
         lCmd = [self.SVMClassPath,self.ThisTempName,self.SVMModel,self.PredictOut]
         print 'svm running: %s' %(json.dumps(lCmd))
         subprocess.check_output(lCmd)
-        print "reading predicted output from [%s]" %(self.PredictOut)
-        lLines = open(self.PredictOut).readlines()
-        lLines = [line.strip() for line in lLines if line.strip() != ""]
-        lClass = [line.split()[0] for line in lLines]
-        llProb = [[float(weight) for weight in line.split()[1:]] for line in lLines]
-        del lLines[:]
-        return lClass,llProb
+        if ReadRes:
+            print "reading predicted output from [%s]" %(self.PredictOut)
+            lLines = open(self.PredictOut).readlines()
+            lLines = [line.strip() for line in lLines if line.strip() != ""]
+            lClass = [line.split()[0] for line in lLines]
+            llProb = [[float(weight) for weight in line.split()[1:]] for line in lLines]
+            del lLines[:]
+            return lClass,llProb
+        else:
+            return [],[]
     
     def Clean(self):
         shutil.rmtree(self.ThisTempName)
         shutil.rmtree(self.PredictOut)
         
         
-    def ClassifyData(self,Data):
+    def ClassifyData(self,Data,OutName,ReadRes = False):
         '''
         Data can be a list, [segmented text]
         or a InName, each line is segmented text
-        return lhClass
-            one hClass for each line: {class id:float weight}
+        
+        result output to OutName
+        if OutName == "", then will create an output in tempdir
+        ReadRes:
+            if True:
+                return lhClass
+                one hClass for each line: {class id:float weight}
+                will cost memories if huge doc input
         '''
         #use utf-8 encoding
         self.GenerateTempName()
         self.MakeSVMData(Data)
-        lClass,llProb = self.Predict()
+        llProb = self.Predict(OutName,ReadRes)[1]
 #         self.Clean()
-        lhClass = []
-        for i in range(len(lClass)):
-            lhClass.append(dict(zip(lClass,llProb[i])))
-        return lhClass
-    
+        if ReadRes:
+            lhClass = []
+            for lProb in llProb:
+                lhClass.append(dict(zip(range(1,len(lProb) + 1), lProb)))
+            return lhClass
+        else:
+            return []
         
          
         
