@@ -21,7 +21,7 @@ import sys
 if 2 != len(sys.argv):
     print 'I classify a given segged text.'
     ExtSVMMultiClassifierC.ShowConf()
-    print 'in=\nout=\n'
+    print 'in=raw data (segmented)\nout=(best_class_id weight_in_each_class)\n'
     sys.exit()
     
     

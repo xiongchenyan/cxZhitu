@@ -1,0 +1,8 @@
+svmpath=/Users/chenyanxiong/Dropbox/zhitu/DocumentClassification/SVMLIGHT/svm_multiclass_classify
+svmmodel=/Users/chenyanxiong/Dropbox/zhitu/DocumentClassification/SogouWorkdir/SogouModelFull
+tempdir=/Users/chenyanxiong/Dropbox/zhitu/DocumentClassification/SogouWorkdir/temp/
+termhashin=/Users/chenyanxiong/Dropbox/zhitu/DocumentClassification/SogouWorkdir/SogouWordIdDict
+termdfin=/Users/chenyanxiong/Dropbox/zhitu/DocumentClassification/SogouWorkdir/SogouDF
+in=/Users/chenyanxiong/Dropbox/zhitu/DocumentClassification/SogouWorkdir/TestIn
+out=/Users/chenyanxiong/Dropbox/zhitu/DocumentClassification/SogouWorkdir/TestOut
+

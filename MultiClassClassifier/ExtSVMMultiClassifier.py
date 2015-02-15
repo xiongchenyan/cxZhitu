@@ -46,7 +46,7 @@ class ExtSVMMultiClassifierC(object):
         self.ThisTempName = ""   #the temp name for each file
         
     def SetConf(self, ConfIn):
-        self.conf = cxConfC()
+        self.conf = cxConfC(ConfIn)
         self.SVMClassPath = self.conf.GetConf('svmpath', self.SVMClassPath)
         self.SVMModel = self.conf.GetConf('svmmodel', self.SVMModel)
         self.TempDir = self.conf.GetConf('tempdir', self.TempDir) + '/'
@@ -57,10 +57,11 @@ class ExtSVMMultiClassifierC(object):
         self.TermHashName = self.conf.GetConf('termhashin',self.TermHashName)
         self.hTermId = pickle.load(open(self.TermHashName))
         self.TermDFName = self.conf.GetConf('termdfin', self.TermDFName)
+        self.hTermDF = pickle.load(open(self.TermDFName))
         
     @staticmethod
     def ShowConf():
-        print "conf:\nsvmpath=(svm_multiclass_classify location)\nsvmmodel=(pre trained svm model)\ntempdir=(an temporary dir to work in)\ntermhashin=\n(the hash id dict of term)termdfin=\n(the term df (term id -> df))"
+        print "conf:\nsvmpath=(svm_multiclass_classify location)\nsvmmodel=(pre trained svm model)\ntempdir=(an temporary dir to work in)\ntermhashin=(the hash id dict of term)\ntermdfin=(the term df (term id -> df))"
         
         
     def TransferTextToSVMFormat(self,text):
